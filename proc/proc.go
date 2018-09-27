@@ -4,6 +4,7 @@ package proc
 // #include <stdlib.h>
 import "C"
 import "unsafe"
+import "strings"
 import "errors"
 import "strconv"
 import "io/ioutil"
@@ -90,23 +91,23 @@ func UIDFromPID(pid int) (uid int) {
 
 // ContainerNameFromPID returns Docker container name for a given process id (PID)
 func ContainerNameFromPID(pid int) (containername string) {
-	var contName *C.char = mallocCStringBuffer(16384 + 1)
+	var contName *C.char = mallocCStringBuffer(128 + 1)
 	defer C.free(unsafe.Pointer(contName))
 
-	C.get_containername_from_pid(C.ulong(pid), contName)
+	C.get_containername_from_pid(C.ulong(pid), contName, 128)
 
 	return C.GoString(contName)
 }
 
 // CmdFromPID returns cmd which initiated the process
 func CmdFromPID(pid int) string {
-	fn := "/proc/" + strconv.Itoa(pid) + "/cmdline"
+	fn := "/host/proc/" + strconv.Itoa(pid) + "/cmdline"
 	b, err := ioutil.ReadFile(fn) // just pass the file name
 	if err != nil {
-		return "unkown"
+		return "unknown"
 	}
 
-	return string(b)
+	return strings.Replace(string(b), "\000", " ", -1)
 	// var cCMD *C.char = mallocCStringBuffer(128 + 1)
 	// defer C.free(unsafe.Pointer(cCMD))
 

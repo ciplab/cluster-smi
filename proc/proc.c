@@ -128,9 +128,9 @@ void get_uid_from_pid(unsigned long pid, unsigned long *uid) {
   fclose(statusf);
 }
 
-void get_containername_from_pid(unsigned long pid, char *name) {
+void get_containername_from_pid(unsigned long pid, char *name, unsigned long namelen) {
   FILE *fp;
-  char path[40], script[150], line[100], *p;
+  char path[40], script[160];
 
   snprintf(path, 40, "/host/proc/%ld/status", pid);
 
@@ -149,7 +149,7 @@ void get_containername_from_pid(unsigned long pid, char *name) {
   }
 
   /* Read the output */
-  if (fgets(name, sizeof(name), fp) == NULL) {
+  if (fgets(name, namelen, fp) == NULL) {
     // If fgets returns NULL put \0 into output
     name[0] = 0;
   }
