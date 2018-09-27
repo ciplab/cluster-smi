@@ -141,9 +141,6 @@ void get_containername_from_pid(unsigned long pid, char *name) {
 
   snprintf(script, 150, DOCKER_INSPECT_NAME_SCRIPT, pid);
 
-  printf(script);
-  printf("\n");
-
   /* Open the command for reading. */
   fp = popen(script, "r");
   if (fp == NULL) {
@@ -156,6 +153,8 @@ void get_containername_from_pid(unsigned long pid, char *name) {
     // If fgets returns NULL put \0 into output
     name[0] = '\0';
   }
+  
+  name[strcspn(name, "\n")] = 0;
 
   /* close */
   pclose(fp);

@@ -222,7 +222,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 			table.SetAlign(termtables.AlignRight, 3)
 
 			if show_processes {
-				table.SetAlign(termtables.AlignRight, 6)
+				table.SetAlign(termtables.AlignRight, 5)
 			}
 
 		} else {
@@ -296,11 +296,12 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 						table.SetAlign(termtables.AlignRight, 3)
 						table.SetAlign(termtables.AlignCenter, 4)
 						if show_processes {
+							table.SetAlign(termtables.AlignRight, 5)
 							table.SetAlign(termtables.AlignRight, 6)
-							// table.SetAlign(termtables.AlignRight, 7)
+							//table.SetAlign(termtables.AlignRight, 7)
+							//table.SetAlign(termtables.AlignRight, 8)
 							table.SetAlign(termtables.AlignRight, 9)
-							table.SetAlign(termtables.AlignRight, 10)
-							// table.SetAlign(termtables.AlignRight, 9)
+                                                        table.SetAlign(termtables.AlignRight, 10)
 						}
 					}
 
@@ -327,6 +328,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 					table.AddRow(tableRow...)
 					table.SetAlign(termtables.AlignRight, 3)
 					if show_processes {
+                                                table.SetAlign(termtables.AlignRight, 5)
 						table.SetAlign(termtables.AlignRight, 6)
 						table.SetAlign(termtables.AlignRight, 9)
 						table.SetAlign(termtables.AlignRight, 10)
