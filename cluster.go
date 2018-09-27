@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/user"
 	"strconv"
-	"time"
 )
 
 // Cluster
@@ -24,11 +23,6 @@ func InitNode(n *cluster.Node) {
 		panic(err)
 	}
 	n.Name = name
-	n.Time = time.Now()
-
-	boot_time, _ := proc.BootTime()
-	n.BootTime = boot_time
-	n.ClockTicks = proc.ClockTicks()
 
 	devices, _ := nvml.GetDevices()
 
@@ -40,12 +34,6 @@ func InitNode(n *cluster.Node) {
 func FetchNode(n *cluster.Node) {
 
 	devices, _ := nvml.GetDevices()
-	n.Time = time.Now()
-
-	boot_time, _ := proc.BootTime()
-	n.BootTime = boot_time
-
-	current_time := proc.TimeOfDay()
 
 	for idx, device := range devices {
 
