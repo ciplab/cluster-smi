@@ -3,7 +3,6 @@ package cluster
 import (
 	"fmt"
 	"github.com/apcera/termtables"
-	"os/user"
 	"regexp"
 	"sort"
 	"time"
