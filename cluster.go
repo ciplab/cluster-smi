@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/user"
 	"strconv"
+	"time"
 )
 
 // Cluster
@@ -23,6 +24,7 @@ func InitNode(n *cluster.Node) {
 		panic(err)
 	}
 	n.Name = name
+	n.Time = time.Now()
 
 	devices, _ := nvml.GetDevices()
 
@@ -34,6 +36,7 @@ func InitNode(n *cluster.Node) {
 func FetchNode(n *cluster.Node) {
 
 	devices, _ := nvml.GetDevices()
+	n.Time = time.Now()
 
 	for idx, device := range devices {
 
