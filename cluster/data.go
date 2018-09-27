@@ -3,6 +3,7 @@ package cluster
 import (
 	"fmt"
 	"github.com/apcera/termtables"
+	"os/user"
 	"regexp"
 	"sort"
 	"time"
@@ -29,6 +30,7 @@ type Process struct {
 	Name            string
 	Username        string
 	ContainerName   string
+	RunTime         int64
 	ExtendedCommand string
 }
 
@@ -185,6 +187,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 		tableHeader = append(tableHeader, "User")
 		tableHeader = append(tableHeader, "Command")
 		tableHeader = append(tableHeader, "GPU Mem")
+		tableHeader = append(tableHeader, "Runtime")
 	}
 	if show_time {
 		tableHeader = append(tableHeader, "Last Seen")
@@ -209,7 +212,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 			}
 
 			if show_processes {
-				tableRow = append(tableRow, []interface{}{"", "", "", "", ""}...)
+				tableRow = append(tableRow, []interface{}{"", "", "", "", "", ""}...)
 			}
 
 			if show_time {
@@ -220,7 +223,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 			table.SetAlign(termtables.AlignRight, 3)
 
 			if show_processes {
-				table.SetAlign(termtables.AlignRight, 5)
+				table.SetAlign(termtables.AlignRight, 6)
 			}
 
 		} else {
@@ -261,6 +264,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 							// cmdName =
                                                 }
 						processUseGPUMemory := fmt.Sprintf("%3d MiB", p.UsedGpuMemory/1024/1024)
+						processRuntime := HumanizeSeconds(p.RunTime)
 						processPID := fmt.Sprintf("%v", p.Pid)
 						processUsername := p.Username
 						processContainer := p.ContainerName
@@ -275,6 +279,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 							processUsername,
 							processName,
 							processUseGPUMemory,
+							processRuntime,
 						}
 						// fmt.Sprintf("%s (%d, %s) %3d MiB %v", p.Name, p.Pid, p.Username, p.UsedGpuMemory/1024/1024, p.RunTime),
 
@@ -292,10 +297,10 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 						table.SetAlign(termtables.AlignRight, 3)
 						table.SetAlign(termtables.AlignCenter, 4)
 						if show_processes {
-							table.SetAlign(termtables.AlignRight, 5)
+							table.SetAlign(termtables.AlignRight, 6)
 							// table.SetAlign(termtables.AlignRight, 7)
-							table.SetAlign(termtables.AlignRight, 8)
 							table.SetAlign(termtables.AlignRight, 9)
+							table.SetAlign(termtables.AlignRight, 10)
 							// table.SetAlign(termtables.AlignRight, 9)
 						}
 					}
@@ -313,7 +318,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 					}
 
 					if show_processes {
-						tableRow = append(tableRow, []interface{}{"", "", "", "", ""}...)
+						tableRow = append(tableRow, []interface{}{"", "", "", "", "", ""}...)
 					}
 
 					if show_time {
@@ -323,9 +328,9 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 					table.AddRow(tableRow...)
 					table.SetAlign(termtables.AlignRight, 3)
 					if show_processes {
-						table.SetAlign(termtables.AlignRight, 5)
-						table.SetAlign(termtables.AlignRight, 8)
+						table.SetAlign(termtables.AlignRight, 6)
 						table.SetAlign(termtables.AlignRight, 9)
+						table.SetAlign(termtables.AlignRight, 10)
 					}
 
 				}

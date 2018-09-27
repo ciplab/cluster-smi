@@ -10,7 +10,7 @@
 #define MAX_SCRIPT 1024
 #define DOCKER_INSPECT_NAME_SCRIPT "\
 #/bin/bash \n\
-docker inspect --format \'{{.Name}}\' \"$(cat /proc/%ld/cgroup |head -n 1 |cut -d / -f 3)\" | sed \'s/^\\///\' \n\
+docker inspect --format \'{{.Name}}\' \"$(cat /host/proc/%ld/cgroup |head -n 1 |cut -d / -f 3)\" | sed \'s/^\\///\' \n\
 "
 
 void clock_ticks(long int *hz) {
@@ -20,7 +20,7 @@ void clock_ticks(long int *hz) {
 void get_cmd(unsigned long  pid, char* cmd) {
 
   char path[40];
-  snprintf(path, 40, "/proc/%ld/cmdline", pid);
+  snprintf(path, 40, "/host/proc/%ld/cmdline", pid);
 
   printf("read from %s\n", path);
 
@@ -112,7 +112,7 @@ void get_uid_from_pid(unsigned long pid, unsigned long *uid) {
   char path[40], line[100], *p;
   FILE* statusf;
 
-  snprintf(path, 40, "/proc/%ld/status", pid);
+  snprintf(path, 40, "/host/proc/%ld/status", pid);
 
   statusf = fopen(path, "r");
   if (!statusf)
@@ -132,7 +132,7 @@ void get_containername_from_pid(unsigned long pid, char *name) {
   FILE *fp;
   char path[40], script[150], line[100], *p;
 
-  snprintf(path, 40, "/proc/%ld/status", pid);
+  snprintf(path, 40, "/host/proc/%ld/status", pid);
 
   fp = fopen(path, "r");
   if (!fp)
@@ -167,7 +167,7 @@ void get_containername_from_pid(unsigned long pid, char *name) {
 void read_pid_info(unsigned long pid, unsigned long *time, unsigned long long *starttime, char *name) {
 
   char fn[MAX_NAME + 1];
-  snprintf(fn, sizeof fn, "/proc/%ld/stat", pid);
+  snprintf(fn, sizeof fn, "/host/proc/%ld/stat", pid);
 
   unsigned long utime = 0;
   unsigned long stime = 0;
