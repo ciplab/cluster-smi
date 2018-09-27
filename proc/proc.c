@@ -130,12 +130,19 @@ void get_uid_from_pid(unsigned long pid, unsigned long *uid) {
 
 void get_containername_from_pid(unsigned long pid, char *name) {
   FILE *fp;
-  char script[150], line[100], *p;
+  char path[40], script[150], line[100], *p;
+
+  snprintf(path, 40, "/proc/%ld/status", pid);
+
+  statusf = fopen(path, "r");
+  if (!statusf)
+    return;
+  fclose(statusf);
 
   snprintf(script, 150, DOCKER_INSPECT_NAME_SCRIPT, pid);
 
   printf(script);
-  printf('\n');
+  printf("\n");
 
   /* Open the command for reading. */
   fp = popen(script, "r");
@@ -147,8 +154,6 @@ void get_containername_from_pid(unsigned long pid, char *name) {
   /* Read the output */
   if (fgets(name, sizeof(name), fp) == NULL) {
     // If fgets returns NULL put \0 into output
-    printf(name);
-    printf('\n');
     name[0] = '\0';
   }
 
