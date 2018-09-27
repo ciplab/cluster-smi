@@ -134,10 +134,10 @@ void get_containername_from_pid(unsigned long pid, char *name) {
 
   snprintf(path, 40, "/proc/%ld/status", pid);
 
-  statusf = fopen(path, "r");
-  if (!statusf)
+  fp = fopen(path, "r");
+  if (!fp)
     return;
-  fclose(statusf);
+  fclose(fp);
 
   snprintf(script, 150, DOCKER_INSPECT_NAME_SCRIPT, pid);
 
