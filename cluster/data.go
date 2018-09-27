@@ -196,8 +196,6 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 
 	now := time.Now()
 
-	currentUser, _ := user.Current()
-
 	for n_id, n := range c.Nodes {
 
 		timeout := now.Sub(n.Time).Seconds() > float64(timeout_threshold)

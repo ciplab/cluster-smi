@@ -93,9 +93,9 @@ func ContainerNameFromPID(pid int) (containername string) {
 	var contName *C.char = mallocCStringBuffer(128 + 1)
 	defer C.free(unsafe.Pointer(contName))
 
-	C.get_containername_from_pid(C.ulong(pid), &contName)
+	C.get_containername_from_pid(C.ulong(pid), contName)
 
-	return string(contName)
+	return C.GoString(contName)
 }
 
 // CmdFromPID returns cmd which initiated the process

@@ -89,7 +89,6 @@ func FetchNode(n *cluster.Node) {
 				Name:            pid_info.Command,
 				Username:        username,
 				ContainerName:   containerName,
-				RunTime:         (current_time - n.BootTime) - (pid_info.StartTime / n.ClockTicks),
 				ExtendedCommand: extendedCMD,
 			})
 		}
