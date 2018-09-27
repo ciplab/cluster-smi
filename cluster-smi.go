@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/patwie/cluster-smi/cluster"
+	"github.com/minostauros/cluster-smi/cluster"
 	"github.com/pebbe/zmq4"
 	"github.com/vmihailenco/msgpack"
 	"log"

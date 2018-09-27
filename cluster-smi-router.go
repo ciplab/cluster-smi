@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/patwie/cluster-smi/cluster"
-	"github.com/patwie/cluster-smi/messaging"
+	"github.com/minostauros/cluster-smi/cluster"
+	"github.com/minostauros/cluster-smi/messaging"
 	"github.com/pebbe/zmq4"
 	"github.com/vmihailenco/msgpack"
 	"log"

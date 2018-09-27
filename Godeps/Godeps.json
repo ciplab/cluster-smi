@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/patwie/cluster-smi",
+	"ImportPath": "github.com/minostauros/cluster-smi",
 	"GoVersion": "go1.8",
 	"GodepVersion": "v79",
 	"Deps": [
