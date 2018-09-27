@@ -182,6 +182,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 
 	if show_processes {
 		tableHeader = append(tableHeader, "PID")
+		tableHeader = append(tableHeader, "Container")
 		tableHeader = append(tableHeader, "User")
 		tableHeader = append(tableHeader, "Command")
 		tableHeader = append(tableHeader, "GPU Mem")
@@ -212,7 +213,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 			}
 
 			if show_processes {
-				tableRow = append(tableRow, []interface{}{"", "", "", "", ""}...)
+				tableRow = append(tableRow, []interface{}{"", "", "", "", "", ""}...)
 			}
 
 			if show_time {
@@ -223,7 +224,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 			table.SetAlign(termtables.AlignRight, 3)
 
 			if show_processes {
-				table.SetAlign(termtables.AlignRight, 5)
+				table.SetAlign(termtables.AlignRight, 6)
 			}
 
 		} else {
@@ -267,17 +268,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 						processRuntime := HumanizeSeconds(p.RunTime)
 						processPID := fmt.Sprintf("%v", p.Pid)
 						processUsername := p.Username
-						if p.Username == currentUser.Username {
-							node_name = highlight(node_name)
-							device_name = highlight(device_name)
-							device_MemoryInfo = highlight(device_MemoryInfo)
-							device_utilization = highlight(device_utilization)
-							processPID = highlight(fmt.Sprintf("%v", p.Pid))
-							processUsername = highlight(processUsername)
-							processName = highlight(processName)
-							processUseGPUMemory = highlight(processUseGPUMemory)
-							processRuntime = highlight(processRuntime)
-						}
+						processContainer := p.ContainerName
 
 						tableRow := []interface{}{
 							node_name,
@@ -285,6 +276,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 							device_MemoryInfo,
 							device_utilization,
 							processPID,
+							processContainer,
 							processUsername,
 							processName,
 							processUseGPUMemory,
@@ -306,10 +298,10 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 						table.SetAlign(termtables.AlignRight, 3)
 						table.SetAlign(termtables.AlignCenter, 4)
 						if show_processes {
-							table.SetAlign(termtables.AlignRight, 5)
+							table.SetAlign(termtables.AlignRight, 6)
 							// table.SetAlign(termtables.AlignRight, 7)
-							table.SetAlign(termtables.AlignRight, 8)
 							table.SetAlign(termtables.AlignRight, 9)
+							table.SetAlign(termtables.AlignRight, 10)
 							// table.SetAlign(termtables.AlignRight, 9)
 						}
 					}
@@ -327,7 +319,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 					}
 
 					if show_processes {
-						tableRow = append(tableRow, []interface{}{"", "", "", "", ""}...)
+						tableRow = append(tableRow, []interface{}{"", "", "", "", "", ""}...)
 					}
 
 					if show_time {
@@ -337,9 +329,9 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 					table.AddRow(tableRow...)
 					table.SetAlign(termtables.AlignRight, 3)
 					if show_processes {
-						table.SetAlign(termtables.AlignRight, 5)
-						table.SetAlign(termtables.AlignRight, 8)
+						table.SetAlign(termtables.AlignRight, 6)
 						table.SetAlign(termtables.AlignRight, 9)
+						table.SetAlign(termtables.AlignRight, 10)
 					}
 
 				}
@@ -377,6 +369,6 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 	// fmt.Printf("\033[4;36m color here \033[0m") // Cyan
 	// fmt.Printf("\033[4;37m color here \033[0m") // White
 	// fmt.Printf("\033[0m color here \033[0m")
-	fmt.Println(time.Now().Format("Mon Jan 2 15:04:05 2006") + " (http://github.com/patwie/cluster-smi)")
+	fmt.Println(time.Now().Format("Mon Jan 2 15:04:05 2006") + " [GPU Cluster Monitoring]")
 	fmt.Println(table.Render())
 }

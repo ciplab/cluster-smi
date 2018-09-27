@@ -9,6 +9,7 @@ int boot_time(float *uptime, float *idle);
 void get_mem(unsigned long *mem_total, unsigned long *mem_free, unsigned long *mem_available);
 unsigned long long int read_cpu_tick();
 void get_uid_from_pid(unsigned long pid, unsigned long *uid);
+void get_containername_from_pid(unsigned long pid, char *name);
 void read_pid_info(unsigned long pid, unsigned long *time, unsigned long long *starttime, char *name);
 unsigned int num_cores();
 

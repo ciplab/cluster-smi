@@ -7,6 +7,11 @@
 #include <sys/time.h>
 
 #define MAX_NAME 128
+#define MAX_SCRIPT 1024
+#define DOCKER_INSPECT_NAME_SCRIPT "\
+#/bin/bash \n\
+docker inspect --format \'{{.Name}}\' \"$(cat /proc/%ld/cgroup |head -n 1 |cut -d / -f 3)\" | sed \'s/^\\///\' \n\
+"
 
 void clock_ticks(long int *hz) {
   *hz = sysconf(_SC_CLK_TCK);
@@ -121,6 +126,31 @@ void get_uid_from_pid(unsigned long pid, unsigned long *uid) {
     break;
   }
   fclose(statusf);
+}
+
+void get_containername_from_pid(unsigned long pid, char *name) {
+  FILE *fp;
+  char script[150], line[100], *p;
+
+  snprintf(script, 150, DOCKER_INSPECT_NAME_SCRIPT, pid);
+
+  /* Open the command for reading. */
+  fp = popen(script, "r");
+  if (fp == NULL) {
+    printf("Failed to run command\n" );
+    return;
+  }
+
+  /* Read the output */
+  if (fgets(name, sizeof(name), fp) == NULL) {
+    // If fgets returns NULL put \0 into output
+    name[0] = '\0'
+  }
+
+  /* close */
+  pclose(fp);
+
+  return;
 }
 
 // read cpu tick for a specific process

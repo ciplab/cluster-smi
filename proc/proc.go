@@ -88,6 +88,16 @@ func UIDFromPID(pid int) (uid int) {
 	return int(cUID)
 }
 
+// ContainerNameFromPID returns Docker container name for a given process id (PID)
+func ContainerNameFromPID(pid int) (containername string) {
+	var contName *C.char = mallocCStringBuffer(128 + 1)
+	defer C.free(unsafe.Pointer(contName))
+
+	C.get_containername_from_pid(C.ulong(pid), &contName)
+
+	return string(contName)
+}
+
 // CmdFromPID returns cmd which initiated the process
 func CmdFromPID(pid int) string {
 	fn := "/proc/" + strconv.Itoa(pid) + "/cmdline"
