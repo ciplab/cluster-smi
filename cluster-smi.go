@@ -91,9 +91,7 @@ func main() {
 		if showJustOnce {
 			break
 		}
-		else {
-			time.Sleep(time.Duration(cfg.Tick) * time.Second)
-		}
+		time.Sleep(time.Duration(cfg.Tick) * time.Second)
 		
 	}
 
