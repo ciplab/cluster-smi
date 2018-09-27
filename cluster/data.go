@@ -29,6 +29,7 @@ type Process struct {
 	UsedGpuMemory   int64
 	Name            string
 	Username        string
+	ContainerName   string
 	RunTime         int64
 	ExtendedCommand string
 }
