@@ -24,6 +24,7 @@ func RequestUpdateMessage() (buf []byte, err error) {
 
 func main() {
 
+	showJustOnce := flag.Bool("once", false, "Show result just once")
 	showTimePtr := flag.Bool("t", false, "show time of events")
 	showExtendedPtr := flag.Bool("e", false, "extended view")
 	showProcessesPtr := flag.Bool("p", false, "verbose process information")
@@ -86,7 +87,14 @@ func main() {
 		clus.Sort()
 		clus.FilterNodes(*nodeRegex)
 		clus.Print(*showProcessesPtr, *showTimePtr, cfg.Timeout, *useColor, *showExtendedPtr)
-		time.Sleep(time.Duration(cfg.Tick) * time.Second)
+		
+		if showJustOnce {
+			break
+		}
+		else {
+			time.Sleep(time.Duration(cfg.Tick) * time.Second)
+		}
+		
 	}
 
 }

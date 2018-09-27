@@ -151,7 +151,7 @@ void get_containername_from_pid(unsigned long pid, char *name) {
   /* Read the output */
   if (fgets(name, sizeof(name), fp) == NULL) {
     // If fgets returns NULL put \0 into output
-    name[0] = '\0';
+    name[0] = 0;
   }
   
   name[strcspn(name, "\n")] = 0;

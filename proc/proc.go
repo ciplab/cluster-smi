@@ -90,7 +90,7 @@ func UIDFromPID(pid int) (uid int) {
 
 // ContainerNameFromPID returns Docker container name for a given process id (PID)
 func ContainerNameFromPID(pid int) (containername string) {
-	var contName *C.char = mallocCStringBuffer(128 + 1)
+	var contName *C.char = mallocCStringBuffer(16384 + 1)
 	defer C.free(unsafe.Pointer(contName))
 
 	C.get_containername_from_pid(C.ulong(pid), contName)
