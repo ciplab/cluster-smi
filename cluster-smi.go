@@ -28,6 +28,8 @@ func main() {
 	showTimePtr := flag.Bool("t", false, "show time of events")
 	showExtendedPtr := flag.Bool("e", false, "extended view")
 	showProcessesPtr := flag.Bool("p", false, "verbose process information")
+	showContainerPtr := flag.Bool("c", false, "show Docker container")
+	showShortPtr := flag.Bool("s", false, "show result w/o command, gpu mem, and runtime")
 	nodeRegex := flag.String("n", ".", "match node-names with regex for display information "+
 		"(if not specified, all nodes will be shown)")
 	usernameFilter := flag.String("u", "", "show all information only for specific user")
@@ -86,7 +88,14 @@ func main() {
 
 		clus.Sort()
 		clus.FilterNodes(*nodeRegex)
-		clus.Print(*showProcessesPtr, *showTimePtr, cfg.Timeout, *useColor, *showExtendedPtr)
+		if *showShortPtr {
+			*showContainerPtr = true
+		}
+		if *showProcessesPtr {
+			*showContainerPtr = true
+			*showShortPtr = true
+		}
+		clus.Print(*showProcessesPtr, *showTimePtr, cfg.Timeout, *useColor, *showExtendedPtr, *showShortPtr, *showContainerPtr)
 		
 		if *showJustOnce {
 			break

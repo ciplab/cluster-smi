@@ -174,16 +174,20 @@ func highlight(s string) string {
 	return fmt.Sprintf("\033[0;33m%s\033[0m", s)
 }
 
-func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold int, useColor bool, extended bool) {
+func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold int, useColor bool, extended bool, show_short bool, show_container bool) {
 
 	table := termtables.CreateTable()
 
 	tableHeader := []interface{}{"Node", "Gpu", "Memory-Usage", "GPU-Util"}
-
-	if show_processes {
-		tableHeader = append(tableHeader, "PID")
+	
+	if show_container {
 		tableHeader = append(tableHeader, "Container")
+	}
+	if show_short {
+		tableHeader = append(tableHeader, "PID")
 		tableHeader = append(tableHeader, "User")
+	}
+	if show_processes {
 		tableHeader = append(tableHeader, "Command")
 		tableHeader = append(tableHeader, "GPU Mem")
 		tableHeader = append(tableHeader, "Runtime")
@@ -210,8 +214,14 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 				"",
 			}
 
+			if show_container {
+				tableRow = append(tableRow, []interface{}{""}...)
+			}
 			if show_processes {
-				tableRow = append(tableRow, []interface{}{"", "", "", "", "", ""}...)
+				tableRow = append(tableRow, []interface{}{"", ""}...)
+				if !show_short {
+					tableRow = append(tableRow, []interface{}{"", "", ""}...)
+				}
 			}
 
 			if show_time {
@@ -247,7 +257,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 					node_lastseen = ""
 				}
 
-				if len(d.Processes) > 0 && show_processes {
+				if len(d.Processes) > 0 && (show_container || show_processes) {
 					for p_id, p := range d.Processes {
 
 						if p_id > 0 {
@@ -273,12 +283,18 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 							device_name,
 							device_MemoryInfo,
 							device_utilization,
-							processPID,
-							processContainer,
-							processUsername,
-							processName,
-							processUseGPUMemory,
-							processRuntime,
+						}
+						if show_container {
+							tableRow = append(tableRow, processContainer)
+						}
+						if show_short {
+							tableRow = append(tableRow, processPID)
+							tableRow = append(tableRow, processUsername)
+						}
+						if show_processes {
+							tableRow = append(tableRow, processName)
+							tableRow = append(tableRow, processUseGPUMemory)
+							tableRow = append(tableRow, processRuntime)
 						}
 						// fmt.Sprintf("%s (%d, %s) %3d MiB %v", p.Name, p.Pid, p.Username, p.UsedGpuMemory/1024/1024, p.RunTime),
 
@@ -295,11 +311,13 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 						table.AddRow(tableRow...)
 						table.SetAlign(termtables.AlignRight, 3)
 						table.SetAlign(termtables.AlignCenter, 4)
-						if show_processes {
+						if show_container {
 							table.SetAlign(termtables.AlignRight, 5)
+						}
+						if show_short {
 							table.SetAlign(termtables.AlignRight, 6)
-							//table.SetAlign(termtables.AlignRight, 7)
-							//table.SetAlign(termtables.AlignRight, 8)
+						}
+						if show_processes {
 							table.SetAlign(termtables.AlignRight, 9)
 							table.SetAlign(termtables.AlignRight, 10)
 						}
@@ -317,8 +335,14 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 						device_utilization,
 					}
 
+					if show_container {
+						tableRow = append(tableRow, []interface{}{""}...)
+					}
+					if show_short {
+						tableRow = append(tableRow, []interface{}{"", ""}...)
+					}
 					if show_processes {
-						tableRow = append(tableRow, []interface{}{"", "", "", "", "", ""}...)
+						tableRow = append(tableRow, []interface{}{"", "", ""}...)
 					}
 
 					if show_time {
@@ -327,9 +351,14 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 
 					table.AddRow(tableRow...)
 					table.SetAlign(termtables.AlignRight, 3)
-					if show_processes {
+					table.SetAlign(termtables.AlignCenter, 4)
+					if show_container {
 						table.SetAlign(termtables.AlignRight, 5)
+					}
+					if show_short {
 						table.SetAlign(termtables.AlignRight, 6)
+					}
+					if show_processes {
 						table.SetAlign(termtables.AlignRight, 9)
 						table.SetAlign(termtables.AlignRight, 10)
 					}
@@ -372,3 +401,7 @@ func (c *Cluster) Print(show_processes bool, show_time bool, timeout_threshold i
 	fmt.Println(time.Now().Format("Mon Jan 2 15:04:05 2006") + " [GPU Cluster Monitoring]")
 	fmt.Println(table.Render())
 }
+
+
+
+
