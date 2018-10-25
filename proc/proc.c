@@ -10,7 +10,7 @@
 #define MAX_SCRIPT 1024
 #define DOCKER_INSPECT_NAME_SCRIPT "\
 #/bin/bash \n\
-docker inspect --format \'{{.Name}}\' \"$(cat /host/proc/%ld/cgroup |tail -n 1 |cut -d / -f 3)\" | sed \'s/^\\///\' \n\
+docker inspect --format \'{{.Name}}\' \"$(cat /host/proc/%ld/cgroup | sed \'s/.*\\/docker\\/\\([a-z0-9]*\\).*/\1/\' | head -1)\" | sed \'s/\\///\' \n\
 "
 
 void clock_ticks(long int *hz) {
