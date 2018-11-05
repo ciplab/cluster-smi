@@ -10,7 +10,7 @@
 #define MAX_SCRIPT 1024
 #define DOCKER_INSPECT_NAME_SCRIPT "\
 #!/bin/bash \n\
-docker inspect --format '{{.Name}}' \"$(cat /host/proc/%ld/cgroup | sed 's/.*\\/docker\\/\\([a-z0-9]*\\).*/\\1/' | head -1)\" | sed 's/^\\///' \n\
+docker inspect --format '{{.Name}}' \"$(cat /host/proc/%ld/cgroup | tr '\\n' '/' | sed 's/.*\\/docker\\/\\([a-z0-9]*\\).*/\\1/' | head -1)\" | sed 's/^\\///' \n\
 "
 
 void clock_ticks(long int *hz) {
@@ -130,7 +130,7 @@ void get_uid_from_pid(unsigned long pid, unsigned long *uid) {
 
 void get_containername_from_pid(unsigned long pid, char *name, unsigned long namelen) {
   FILE *fp;
-  char path[40], script[160];
+  char path[40], script[210];
 
   snprintf(path, 40, "/host/proc/%ld/status", pid);
 
@@ -139,7 +139,7 @@ void get_containername_from_pid(unsigned long pid, char *name, unsigned long nam
     return;
   fclose(fp);
 
-  snprintf(script, 150, DOCKER_INSPECT_NAME_SCRIPT, pid);
+  snprintf(script, 200, DOCKER_INSPECT_NAME_SCRIPT, pid);
 
   /* Open the command for reading. */
   fp = popen(script, "r");
