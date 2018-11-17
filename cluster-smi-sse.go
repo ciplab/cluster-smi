@@ -209,6 +209,15 @@ func main() {
 		}
 	}()
 
-	log.Fatal("HTTP server error: ", http.ListenAndServe(cfg.SSEIp + ":" + cfg.Ports.SSE, broker))
+	if len(cfg.SSLCert) > 0 {
+		err := http.ListenAndServeTLS(cfg.SSEIp + ":" + cfg.Ports.SSE, cfg.SSLCert, cfg.SSLKey, nil)
+	    if err != nil {
+	        log.Fatal("ListenAndServe: ", err)
+	    }
+	}
+	else{
+		log.Fatal("HTTP server error: ", http.ListenAndServe(cfg.SSEIp + ":" + cfg.Ports.SSE, broker))	
+	}
+	
 
 }
