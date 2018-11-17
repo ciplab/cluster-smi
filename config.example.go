@@ -11,9 +11,11 @@ type Config struct {
 	Tick     int    `yaml:"tick"`      // tick (in seconds) between receiving data
 	Timeout  int    `yaml:"timeout"`   // threshold (in seconds) after a node is considered/displayed as offline
 	RouterIp string `yaml:"router_ip"` // ip of cluster-smi-router
+	SSEIp string `yaml:"sse_ip"` // ip to send sse event
 	Ports    struct {
 		Nodes   string `yaml:"nodes"`   // port of cluster-smi-router, which nodes send to
 		Clients string `yaml:"clients"` // port of cluster-smi-router, where clients subscribe to
+		SSE string `yaml:"sse"` // port for SSE
 	} `yaml:"ports"`
 }
 
@@ -22,10 +24,12 @@ func LoadConfig() Config {
 	c := Config{}
 
 	c.RouterIp = "127.0.0.1"
+	c.SSEIp = "127.0.0.1"
 	c.Tick = 3
 	c.Timeout = 180
 	c.Ports.Nodes = "9080"
 	c.Ports.Clients = "9081"
+	c.Ports.SSE = "3000"
 
 	if os.Getenv("CLUSTER_SMI_CONFIG_PATH") != "" {
 		fn := os.Getenv("CLUSTER_SMI_CONFIG_PATH")
@@ -55,8 +59,10 @@ func (c Config) Print() {
 	log.Println("  Tick:", c.Tick)
 	log.Println("  Timeout:", c.Timeout)
 	log.Println("  RouterIp:", c.RouterIp)
+	log.Println("  SSEIp:", c.SSEIp)
 	log.Println("  Ports:")
 	log.Println("    Nodes:", c.Ports.Nodes)
 	log.Println("    Clients:", c.Ports.Clients)
+	log.Println("    SSE:", c.Ports.SSE)
 
 }

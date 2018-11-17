@@ -6,4 +6,5 @@ cluster-smi
 cluster-smi-local
 cluster-smi-node
 cluster-smi-router
+cluster-smi-sse
 comd.sh
