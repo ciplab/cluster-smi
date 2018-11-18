@@ -11,7 +11,6 @@ type Config struct {
 	Tick     int    `yaml:"tick"`      // tick (in seconds) between receiving data
 	Timeout  int    `yaml:"timeout"`   // threshold (in seconds) after a node is considered/displayed as offline
 	RouterIp string `yaml:"router_ip"` // ip of cluster-smi-router
-	SSEIp string `yaml:"sse_ip"` // ip to send sse event
 	SSLCert string `yaml:"ssl_cert"` // certificate for https
 	SSLKey string `yaml:"ssl_key"` // certificate for https
 	Ports    struct {
@@ -26,7 +25,6 @@ func LoadConfig() Config {
 	c := Config{}
 
 	c.RouterIp = "127.0.0.1"
-	c.SSEIp = "127.0.0.1"
 	c.SSLCert = ""
 	c.SSLKey = ""
 	c.Tick = 3
@@ -63,7 +61,6 @@ func (c Config) Print() {
 	log.Println("  Tick:", c.Tick)
 	log.Println("  Timeout:", c.Timeout)
 	log.Println("  RouterIp:", c.RouterIp)
-	log.Println("  SSEIp:", c.SSEIp)
 	log.Println("  SSLCert:", c.SSLCert)
 	log.Println("  SSLKey:", c.SSLKey)
 	log.Println("  Ports:")
