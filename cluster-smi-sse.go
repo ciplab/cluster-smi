@@ -210,7 +210,7 @@ func main() {
 	}()
 
 	if len(cfg.SSLCert) > 0 {
-		err := http.ListenAndServeTLS(cfg.SSEIp + ":" + cfg.Ports.SSE, cfg.SSLCert, cfg.SSLKey, nil)
+		err := http.ListenAndServeTLS(cfg.SSEIp + ":" + cfg.Ports.SSE, cfg.SSLCert, cfg.SSLKey, broker)
 	    if err != nil {
 	        log.Fatal("ListenAndServe: ", err)
 	    }
