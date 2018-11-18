@@ -214,8 +214,7 @@ func main() {
 	    if err != nil {
 	        log.Fatal("ListenAndServe: ", err)
 	    }
-	}
-	else{
+	} else {
 		log.Fatal("HTTP server error: ", http.ListenAndServe(cfg.SSEIp + ":" + cfg.Ports.SSE, broker))	
 	}
 	
