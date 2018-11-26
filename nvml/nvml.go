@@ -120,32 +120,37 @@ func (s *Device) GetUtilization() (gpu, memory int, err error) {
 }
 
 // GetPowerUsage returns the power consumption of the GPU in watts
-func (s *Device) GetPowerUsage() (int, error) {
-	usage, err := s.callGetIntFunc(C.getNvmlIntProperty(C.nvmlDeviceGetPowerUsage))
+func (s *Device) GetPowerUsage() (usage int, err error) {
+ 	usage, err = s.callGetIntFunc(C.getNvmlIntProperty(C.nvmlDeviceGetPowerUsage))
 	if err != nil {
 		return 0, err
 	}
 	// nvmlDeviceGetPowerUsage returns milliwatts.. convert to watts
-	return usage / 1000, nil
+	usage = usage / 1000
+ 	
+ 	err = nil
+ 	return
 }
 
 // GetFanSpeed returns the fan speed in percent
-func (s *Device) GetFanSpeed() (int, error) {
-	speed, err := s.callGetIntFunc(C.getNvmlIntProperty(C.nvmlDeviceGetFanSpeed))
-	if err != nil {
-		return 0, err
-	}
-	return speed, nil
+func (s *Device) GetFanSpeed() (speed int, err error) {
+ 	speed, err = s.callGetIntFunc(C.getNvmlIntProperty(C.nvmlDeviceGetFanSpeed))
+ 	if err != nil {
+ 		return 0, err
+ 	}
+ 	return
 }
 
 // GetTemperature returns the Device's temperature in Farenheit and celsius
-func (s *Device) GetTemperature() (int, int, error) {
-	var tempc C.uint
-	if result := C.nvmlDeviceGetTemperature(s.d, C.NVML_TEMPERATURE_GPU, &tempc); result != C.NVML_SUCCESS {
+func (s *Device) GetTemperature() (tempc int, tempf int, err error) {
+ 	var temp C.uint
+ 	if result := C.nvmlDeviceGetTemperature(s.d, C.NVML_TEMPERATURE_GPU, &temp); result != C.NVML_SUCCESS {
 		return -1, -1, getGoError(result)
 	}
-
-	return int(tempc), int(tempc*9/5 + 32), nil
+	tempc = int(temp)
+ 	tempf = int(temp*9/5 + 32)
+ 	err = nil
+ 	return
 }
 
 // GetMemoryInfo retrieves the amount of used, free and total memory available on the device, in bytes.

@@ -38,6 +38,9 @@ type Device struct {
 	Name              string `json:"name"`
 	Utilization       int    `json:"utilization"`
 	MemoryUtilization Memory `json:"memory"`
+	FanSpeed          int    `json:"fan"`
+ 	Temperature       int    `json:"temp"`
+ 	PowerUsage        int    `json:"power"`
 	Processes         []Process
 }
 
@@ -77,7 +80,8 @@ func FilterByUser(c Cluster, username string) Cluster {
 
 			if len(Processes) > 0 {
 				current_device := Device{
-					d.Id, d.Name, d.Utilization, d.MemoryUtilization, Processes,
+					d.Id, d.Name, d.Utilization, d.MemoryUtilization,
+					d.FanSpeed, d.Temperature, d.PowerUsage, Processes,
 				}
 				Devices = append(Devices, current_device)
 			}
